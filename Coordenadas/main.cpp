@@ -235,7 +235,7 @@ int main()
         glm::mat4 model, view, projection;
         model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-        view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+        view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
         projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
@@ -256,7 +256,7 @@ int main()
             glm::mat4 model;
             model = glm::translate(model, cubePositions[i]);
             if (i == 0)
-                model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+                model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 1.0f, 1.0f));
             else {
                 float angle = 20.0f * i;
                 model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
