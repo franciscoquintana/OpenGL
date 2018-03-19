@@ -3,6 +3,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Shader.h"
 #include "stb_image.h"
 #include "KeyBoard.h"
@@ -143,8 +147,6 @@ int main()
     glBindVertexArray(0);
 
     //Textura
-
-
     unsigned int texture1, texture2;
 
     loadTexture(&texture1, "container.jpg");
@@ -177,6 +179,16 @@ int main()
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
+
+        //Movimiento
+        glm::mat4 trans;
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        float time = sin((float)glfwGetTime());
+        printf("%.2f\n", time);
+        trans = glm::scale(trans, glm::vec3(time, time, time));
+
+        unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
         shader.use();
 
