@@ -5,13 +5,19 @@
 
 #include "Shader.h"
 #include "stb_image.h"
+#include "KeyBoard.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+float value = 0.1;
+int shaderID;
+KeyBoard *keyBoard;
 
 void loadTexture(unsigned int *texture, char *image) {
     glGenTextures(1, texture);
@@ -80,7 +86,9 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
+    //CallBacks
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     // glad: load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -89,12 +97,15 @@ int main()
         return -1;
     }
 
+    keyBoard = new KeyBoard(window);
+
     //Triangulos
     float vertices[] = {
-            0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // top right
-            0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+            //x y z             //r g b             //pos texture
+            0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   2.0f, 2.0f,  // top right
+            0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   2.0f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,   0.0f, 1.0f // top left
+            -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,   0.0f, 2.0f // top left
     };
 
     unsigned int indices[] = {
@@ -142,7 +153,7 @@ int main()
 
     //Shader
     Shader shader("shaders/shader.vs", "shaders/shader.fs");
-
+    shaderID = shader.ID;
     shader.use();
     glUniform1i(glGetUniformLocation(shader.ID, "texture1"), 0); // set it manually
     shader.setInt("texture2", 1); // or with shader class
@@ -188,6 +199,31 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+}
+
+//Keys
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    keyBoard->updateKey(key,action);
+
+    bool change = false;
+    if(keyBoard->getKeyState(GLFW_KEY_UP) == PRESSONCE)
+    {
+        value += 0.1;
+        change = true;
+    }
+
+    if(keyBoard->getKeyState(GLFW_KEY_DOWN) == PRESSONCE)
+    {
+        value -= 0.1;
+        change = true;
+    }
+    if (change)
+    {
+        glUniform1f(glGetUniformLocation(shaderID, "amount"), value);
+        printf("%1.2f\n", value);
+    }
 }
 
 //Window size change event
