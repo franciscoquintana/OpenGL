@@ -3,8 +3,8 @@ project(Camara)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Camara main.cpp glad.c Shader.cpp stb_image.cpp KeyBoard.cpp camera.h)
+add_executable(Camara main.cpp glad.c Shader.cpp stb_image.cpp KeyBoard.cpp camera.cpp)
 
 include_directories(glad/include)
 
-target_link_libraries(Camara glfw3 X11 Xi Xrandr Xxf86vm Xinerama Xcursor dl pthread)
+target_link_libraries(Camara glfw X11 Xi Xrandr Xxf86vm Xinerama Xcursor dl pthread)
