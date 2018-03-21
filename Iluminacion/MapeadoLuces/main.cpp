@@ -147,7 +147,7 @@ int main() {
     // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
@@ -176,39 +176,17 @@ int main() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-        lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-        lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
-
-        printf("x:%.2f,y:%.2f,z:%2.f\n", lightPos.x, lightPos.y, lightPos.z);
+        //lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
+        //lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
+        //printf("x:%.2f,y:%.2f,z:%2.f\n", lightPos.x, lightPos.y, lightPos.z);
 
         shaderIluminacion.use();
         //Material
-        shaderIluminacion.setVec3("material.ambient",  1.0f, 0.5f, 0.31f);
-        shaderIluminacion.setVec3("material.diffuse",  1.0f, 0.5f, 0.31f);
         shaderIluminacion.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-        shaderIluminacion.setFloat("material.shininess", 32.0f);
+        shaderIluminacion.setFloat("material.shininess", 64.0f);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-        
-        //Light
-        glm::vec3 lightColor;
-        /*
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
-        
-        
-
-        glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // decrease the influence
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
-
-        shaderIluminacion.setVec3("light.ambient", ambientColor);
-        shaderIluminacion.setVec3("light.diffuse", diffuseColor);*/
-        
-        shaderIluminacion.setVec3("light.ambient", 1.0f, 1.0f, 1.0f); // note that all light colors are set at full intensity
-        shaderIluminacion.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+        shaderIluminacion.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);  // note that all light colors are set at full intensity
+        shaderIluminacion.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         shaderIluminacion.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
 
@@ -224,6 +202,10 @@ int main() {
         // world transformation
         glm::mat4 model;
         shaderIluminacion.setMat4("model", model);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, diffuseMap);
+
 
         // render the cube
         glBindVertexArray(cubeVAO);
@@ -316,7 +298,15 @@ int loadTexture(char *image) {
     unsigned char *data = stbi_load(image, &width, &height, &nrChannels, 0);
     if (data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        GLenum format;
+        if (nrChannels == 1)
+            format = GL_RED;
+        else if (nrChannels == 3)
+            format = GL_RGB;
+        else if (nrChannels == 4)
+            format = GL_RGBA;
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
