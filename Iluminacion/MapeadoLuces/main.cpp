@@ -157,9 +157,11 @@ int main() {
     //glBindVertexArray(0);
 
     unsigned int diffuseMap = loadTexture("res/container.png");
+    unsigned int specularMap = loadTexture("res/container_specular.png");
 
     shaderIluminacion.use();
     shaderIluminacion.setInt("material.diffuse", 0);
+    shaderIluminacion.setInt("material.specular", 1);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -185,7 +187,7 @@ int main() {
         shaderIluminacion.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
         shaderIluminacion.setFloat("material.shininess", 64.0f);
 
-        shaderIluminacion.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);  // note that all light colors are set at full intensity
+        shaderIluminacion.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
         shaderIluminacion.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         shaderIluminacion.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
@@ -205,7 +207,8 @@ int main() {
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
-
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
 
         // render the cube
         glBindVertexArray(cubeVAO);
