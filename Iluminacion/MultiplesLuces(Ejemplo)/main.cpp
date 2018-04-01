@@ -13,12 +13,23 @@
 #include "camera.h"
 #include "Shader.h"
 #include "stb_image.h"
+#include "main.h"
+#include "ui.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 int loadTexture(char *image);
+
+ImVec4 clear_color = ImVec4(0.2f, 0.3f, 0.3f, 1.0f);
+glm::vec3 pointLightPositions[] = {
+        glm::vec3( 0.7f,  0.2f,  2.0f),
+        glm::vec3( 2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f,  2.0f, -12.0f),
+        glm::vec3( 0.0f,  0.0f, -3.0f)
+};
+
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -139,13 +150,6 @@ int main() {
             glm::vec3( 1.5f,  0.2f, -1.5f),
             glm::vec3(-1.3f,  1.0f, -1.5f)
     };
-    // positions of the point lights
-    glm::vec3 pointLightPositions[] = {
-            glm::vec3( 0.7f,  0.2f,  2.0f),
-            glm::vec3( 2.3f, -3.3f, -4.0f),
-            glm::vec3(-4.0f,  2.0f, -12.0f),
-            glm::vec3( 0.0f,  0.0f, -3.0f)
-    };
 
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
@@ -192,7 +196,6 @@ int main() {
     //Imgui
     bool show_demo_window = true;
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.2f, 0.3f, 0.3f, 1.0f);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -303,14 +306,8 @@ int main() {
         shaderlampara.setMat4("projection", projection);
         shaderlampara.setMat4("view", view);
 
-        model = glm::mat4();
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-
-        shaderlampara.setMat4("model", model);
-
         glBindVertexArray(lightVAO);
-        for (unsigned int i = 0; i < 4; i++)
+        for (unsigned int i = 0; i < NLAMPS; i++)
         {
             model = glm::mat4();
             model = glm::translate(model, pointLightPositions[i]);
@@ -324,19 +321,7 @@ int main() {
         ImGui_ImplGlfwGL3_NewFrame();
 
 
-        {
-            ImGui::Text("Hello, world!");                           // Some text (you can use a format string too)
-            ImGui::SliderFloat("float", &pointLightPositions[0].y, -2.0f, 2.0f);            // Edit 1 float as a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats as a color
-            //ImGui::InputText("decimal", bufy, 20, ImGuiInputTextFlags_CharsDecimal);
-            ImGui::InputFloat3("input float2", glm::value_ptr(pointLightPositions[0]));
-            //pointLightPositions[0].y = atof(bufy);
-            if (ImGui::Button("Demo Window"))                       // Use buttons to toggle our bools. We could use Checkbox() as well.
-                show_demo_window ^= 1;
-            if (ImGui::Button("Another Window"))
-                show_another_window ^= 1;
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        }
+        printGui();
 
         if (show_demo_window)
         {
