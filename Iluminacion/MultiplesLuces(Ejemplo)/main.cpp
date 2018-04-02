@@ -273,6 +273,7 @@ int main() {
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camara.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        //printf("%.2f\n", camara.Zoom);
         glm::mat4 view = camara.GetViewMatrix();
         shaderIluminacion.setMat4("projection", projection);
         shaderIluminacion.setMat4("view", view);
@@ -328,16 +329,20 @@ int main() {
             ImGui::ShowDemoWindow(&show_demo_window);
         }
 
-        ImGui::Render();
+        ImGuiIO& io = ImGui::GetIO();
+        camara.ProcessMouseScroll(io.MouseWheel);
+
 
         //Camara
 
         if (ImGui::IsMouseClicked(1))
         {
-            ImGuiIO& io = ImGui::GetIO();
             lastX = io.MousePos.x;
             lastY = io.MousePos.y;
         }
+
+
+        ImGui::Render();
 
         //Intercambia buffers
         glfwSwapBuffers(window);

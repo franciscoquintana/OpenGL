@@ -26,10 +26,12 @@ void printGui(){
 
 void printLamps(){
     for (int i = 0; i < NLAMPS; i++) {
-        if(ImGui::TreeNode(formatStr("Lampara %i", i + 1))) {
+        char *temp = formatStr("Lampara %i", i + 1);
+        if(ImGui::TreeNode(temp)) {
             ImGui::SliderFloat3("Pos", glm::value_ptr(pointLightPositions[i]), -2.0f, 2.0f);
             ImGui::TreePop();
         }
+        free(temp);
     }
 }
 
