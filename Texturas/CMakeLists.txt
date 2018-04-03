@@ -7,4 +7,4 @@ add_executable(Texturas main.cpp glad.c Shader.cpp stb_image.cpp KeyBoard.cpp Ke
 
 include_directories(glad/include)
 
-target_link_libraries(Texturas glfw3 X11 Xi Xrandr Xxf86vm Xinerama Xcursor dl pthread)
+target_link_libraries(Texturas glfw X11 Xi Xrandr Xxf86vm Xinerama Xcursor dl pthread)

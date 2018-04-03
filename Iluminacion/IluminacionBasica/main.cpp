@@ -165,9 +165,9 @@ int main() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        /*
+
         lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-        lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;*/
+        lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
 
         shaderIluminacion.use();
         shaderIluminacion.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
@@ -226,6 +226,10 @@ void processInput(GLFWwindow *window)
         camara.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camara.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        camara.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        camara.ProcessKeyboard(DOWN, deltaTime);
 
 }
 

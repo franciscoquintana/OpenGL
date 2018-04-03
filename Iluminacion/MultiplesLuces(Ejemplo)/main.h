@@ -10,5 +10,6 @@
 #define NLAMPS 4
 extern glm::vec3 pointLightPositions[];
 extern ImVec4 clear_color;
+extern glm::vec3 lightPos;
 
 #endif

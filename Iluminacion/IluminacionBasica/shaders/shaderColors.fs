@@ -12,7 +12,7 @@ uniform vec3 viewPos;
 void main()
 {
     float vambiente = 0.1;
-    float specularStrength = 0.5;
+    float specularStrength = 0.4;
 
     vec3 ambient = vambiente * lightColor;
 

@@ -16,6 +16,7 @@ void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 int loadTexture(char *image);
+void CalcFPS();
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -112,7 +113,7 @@ int main() {
             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
             -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,     -1.0f,  0.0f,  0.0f, 1.0f,
 
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
             0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
@@ -318,4 +319,15 @@ int loadTexture(char *image) {
     }
     stbi_image_free(data);
     return texture;
+}
+void CalcFPS() {
+    m_frameCount++;
+
+    long long time = GetCurrentTimeMillis();
+
+    if (time - m_frameTime >= 1000) {
+        m_frameTime = time;
+        m_fps = m_frameCount;
+        m_frameCount = 0;
+    }
 }

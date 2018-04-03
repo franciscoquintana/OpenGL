@@ -11,13 +11,17 @@
 void printLamps();
 char * formatStr(const char* fmt, ...);
 
-void printGui(){
+void printGui() {
+
     if(ImGui::TreeNode(formatStr("Lamparas"))) {
         printLamps();
         ImGui::TreePop();
     }
 
     ImGui::ColorEdit3("Color Fondo", (float*)&clear_color);
+
+    ImGui::Text("Dir Luz");
+    ImGui::SliderFloat3("Dir", glm::value_ptr(lightPos), -2.0f, 2.0f);
 
     ImGui::Separator();
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
